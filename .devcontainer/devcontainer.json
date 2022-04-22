@@ -1,0 +1,39 @@
+{
+    "image": "mcr.microsoft.com/vscode/devcontainers/dotnet:6.0",
+    "remoteUser": "vscode",
+    "forwardPorts": [5020],
+    "onCreateCommand": "dotnet tool install --global dotnet-ef --version 6.0.3",
+    "postStartCommand": "dotnet restore",
+    "remoteEnv": { 
+        "PATH": "${containerEnv:PATH}:/home/vscode/.dotnet/tools",
+        "ASPNETCORE_Kestrel__Certificates__Default__Password": "devcert",
+        "ASPNETCORE_Kestrel__Certificates__Default__Path": "/home/vscode/.aspnet/https/localhost.pfx",
+    },
+    "extensions": [
+        "streetsidesoftware.code-spell-checker",
+        "eamodio.gitlens",
+        "codezombiech.gitignore",
+        "heaths.vscode-guid",
+        "ms-dotnettools.csharp",
+        "patcx.vscode-nuget-gallery",
+        "leo-labs.dotnet",
+    ],
+    "settings": {
+        "editor.semanticHighlighting.enabled": true,
+        "csharp.semanticHighlighting.enabled": true,
+        "cSpell.words": [
+            "Npgsql",
+            "Unprocessable"
+        ],
+        "cSpell.ignorePaths": [
+            "package-lock.json",
+            "node_modules",
+            "vscode-extension",
+            ".git/objects",
+            ".vscode",
+            ".vscode-insiders",
+            ".devcontainer"
+        ]
+    },
+    "mounts": [ "source=${env:HOME}${env:USERPROFILE}/.aspnet/https,target=/home/vscode/.aspnet/https,type=bind" ]
+}
