@@ -1,1 +1,4 @@
-/openiddict-service
+.vscode/settings.json
+
+bin
+obj
