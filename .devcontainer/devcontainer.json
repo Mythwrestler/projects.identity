@@ -3,12 +3,10 @@
     "remoteUser": "vscode",
     "forwardPorts": [5010],
     "onCreateCommand": "dotnet tool install --global dotnet-ef --version 6.0.3",
-    "postStartCommand": "dotnet restore",
+    "postStartCommand": "dotnet restore && dotnet dev-certs --trust",
     "remoteEnv": { 
         "PATH": "${containerEnv:PATH}:/home/vscode/.dotnet/tools",
-        "ASPNETCORE_Kestrel__Certificates__Default__Password": "devcert",
-        "ASPNETCORE_Kestrel__Certificates__Default__Path": "/home/vscode/.aspnet/https/localhost.pfx",
-    },
+   },
     "extensions": [
         "streetsidesoftware.code-spell-checker",
         "eamodio.gitlens",
@@ -35,5 +33,4 @@
             ".devcontainer"
         ]
     },
-    "mounts": [ "source=${env:HOME}${env:USERPROFILE}/.aspnet/https,target=/home/vscode/.aspnet/https,type=bind" ]
 }
