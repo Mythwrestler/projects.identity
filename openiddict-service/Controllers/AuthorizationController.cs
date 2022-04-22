@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OpenIddict.Abstractions;
 using OpenIddict.Server.AspNetCore;
@@ -41,6 +42,11 @@ public class AuthorizationController : Controller
             // Retrieve the claims principal stored in the authorization code
             claimsPrincipal = (await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme)).Principal;
         }
+        else if (request.IsRefreshTokenGrantType())
+        {
+            // Retrieve the claims principal stored in the refresh token.
+            claimsPrincipal = (await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme)).Principal;
+        }
         else
         {
             throw new InvalidOperationException("The specified grant type is not supported.");
@@ -75,11 +81,11 @@ public class AuthorizationController : Controller
 
         // Create a new claims principal
         var claims = new List<Claim>
-    {
-        // 'subject' claim which is required
-        new Claim(OpenIddictConstants.Claims.Subject, result.Principal.Identity.Name),
-        new Claim("some claim", "some value").SetDestinations(OpenIddictConstants.Destinations.AccessToken)
-    };
+        {
+            // 'subject' claim which is required
+            new Claim(OpenIddictConstants.Claims.Subject, result.Principal.Identity.Name),
+            new Claim("some claim", "some value").SetDestinations(OpenIddictConstants.Destinations.AccessToken)
+        };
 
         var claimsIdentity = new ClaimsIdentity(claims, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
 
@@ -91,6 +97,21 @@ public class AuthorizationController : Controller
         // Signing in with the OpenIddict authentiction scheme trigger OpenIddict to issue a code (which can be exchanged for an access token)
         return SignIn(claimsPrincipal, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
     }
+
+    [Authorize(AuthenticationSchemes = OpenIddictServerAspNetCoreDefaults.AuthenticationScheme)]
+    [HttpGet("~/connect/userinfo")]
+    public async Task<IActionResult> Userinfo()
+    {
+        var claimsPrincipal = (await HttpContext.AuthenticateAsync(OpenIddictServerAspNetCoreDefaults.AuthenticationScheme)).Principal;
+
+        return Ok(new
+        {
+            Name = claimsPrincipal.GetClaim(OpenIddictConstants.Claims.Subject),
+            Occupation = "Developer",
+            Age = 43
+        });
+    }
+
 
 
 }

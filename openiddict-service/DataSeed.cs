@@ -40,7 +40,7 @@ public class DataSeed : IHostedService
                         OpenIddictConstants.Permissions.Endpoints.Token,
 
                         OpenIddictConstants.Permissions.GrantTypes.AuthorizationCode,
-
+                        OpenIddictConstants.Permissions.GrantTypes.RefreshToken,
                         OpenIddictConstants.Permissions.GrantTypes.ClientCredentials,
 
                         OpenIddictConstants.Permissions.Prefixes.Scope + "api",

@@ -1,7 +1,7 @@
 {
     "image": "mcr.microsoft.com/vscode/devcontainers/dotnet:6.0",
     "remoteUser": "vscode",
-    "forwardPorts": [5020],
+    "forwardPorts": [5010],
     "onCreateCommand": "dotnet tool install --global dotnet-ef --version 6.0.3",
     "postStartCommand": "dotnet restore",
     "remoteEnv": { 

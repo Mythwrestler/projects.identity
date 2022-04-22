@@ -19,13 +19,15 @@ builder.Services.AddOpenIddict()
     })
     .AddServer(options => 
     {
-        options.AllowClientCredentialsFlow();
         options.AllowAuthorizationCodeFlow()
             .RequireProofKeyForCodeExchange();
+        options.AllowRefreshTokenFlow();
+        options.AllowClientCredentialsFlow();
 
         options
             .SetAuthorizationEndpointUris("/connect/authorize")
-            .SetTokenEndpointUris("/connect/token");
+            .SetTokenEndpointUris("/connect/token")
+            .SetUserinfoEndpointUris("/connect/userinfo");
 
         options
             .AddEphemeralEncryptionKey()
@@ -36,7 +38,8 @@ builder.Services.AddOpenIddict()
 
         options.UseAspNetCore()
             .EnableTokenEndpointPassthrough()
-            .EnableAuthorizationEndpointPassthrough(); 
+            .EnableAuthorizationEndpointPassthrough()
+            .EnableUserinfoEndpointPassthrough();
 
     });
 
@@ -63,6 +66,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
